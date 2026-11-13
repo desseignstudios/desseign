@@ -126,20 +126,7 @@
         "default": "Full-width",
         "group": "homepage"
       },
-      "testimonial_size": {
-        "type": "select",
-        "options": [
-          "Full-width",
-          "Fixed-width"
-        ],
-        "default": "Full-width",
-        "group": "homepage"
-      },
-      "show_portfolio_filter": {
-        "type": "boolean",
-        "default": true,
-        "group": "homepage"
-      },
+
       "disqus_shortname": {
         "type": "text",
         "group": "post"
