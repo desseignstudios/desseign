@@ -3,474 +3,377 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Runners Weather - Your Personal Running Forecast</title>
+    <title>Runners Weather – Know when to run, and what to wear</title>
+    <meta name="description" content="Dew point, wind, rain and feels-like temps, turned into one clear answer for every hour of your day. Free on iPhone and Android.">
     {{ghost_head}}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --ink: #16222B;
+            --ink-2: #3D4A54;
+            --ink-3: #5A6670;
+            --ground: #FBF8F3;
+            --line: #E7E1D6;
+            --peach: #F4D9BF;
+            --orange: #E8772E;
+            --orange-dark: #A8501A;
+            --blue: #2F6E99;
+            --green: #2E6B3A;
+            --wrap: 1200px;
+            --gutter: clamp(20px, 5vw, 64px);
         }
+
+        *, *::before, *::after { box-sizing: border-box; }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            line-height: 1.6;
-            color: #2c3e50;
-            overflow-x: hidden;
+            margin: 0;
+            background: var(--ground);
+            color: var(--ink);
+            font-family: Inter, system-ui, -apple-system, sans-serif;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
         }
 
-        .hero {
-            background: linear-gradient(135deg, #ff7b47 0%, #ff9a76 50%, #87ceeb 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-        }
+        h1, h2, h3 { font-family: 'Space Grotesk', Inter, sans-serif; margin: 0; }
+        p { margin: 0; }
+        img { max-width: 100%; }
+        a { color: var(--ink); }
+        a:hover { color: var(--orange-dark); }
 
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
-            opacity: 0.3;
-        }
+        .wrap { max-width: var(--wrap); margin: 0 auto; padding-left: var(--gutter); padding-right: var(--gutter); }
+        .section { padding-top: clamp(56px, 8vw, 112px); padding-bottom: clamp(56px, 8vw, 112px); }
+        .eyebrow { font-size: 14px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--orange-dark); }
+        .h2 { font-size: clamp(34px, 4vw, 52px); line-height: 1.08; letter-spacing: -0.02em; font-weight: 700; }
+        .lead { font-size: 17px; line-height: 1.6; color: var(--ink-2); }
 
-        .hero-content {
-            text-align: center;
-            max-width: 800px;
-            padding: 2rem;
-            z-index: 1;
-            position: relative;
-        }
+        /* Header */
+        .site-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding-top: 20px; padding-bottom: 20px; }
+        .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .brand img { width: 40px; height: 40px; border-radius: 10px; object-fit: cover; }
+        .brand span { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 20px; color: var(--ink); }
+        .main-nav { display: flex; align-items: center; gap: 28px; flex-wrap: wrap; font-size: 15px; font-weight: 500; }
+        .main-nav a { text-decoration: none; padding: 12px 0; }
+        .main-nav .nav-cta { padding: 12px 20px; border-radius: 999px; background: var(--ink); color: #fff; }
+        .main-nav .nav-cta:hover { background: #2a3a45; color: #fff; }
 
-        .logo {
-            width: 160px;
-            height: 160px;
-            margin: 0 auto 2rem;
-            background: rgba(255,255,255,0.1);
-            border-radius: 25px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255,255,255,0.2);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-        }
+        /* Store badges */
+        .badges { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
+        .badges a { display: block; line-height: 0; }
+        .badge-apple { height: 56px; width: auto; }
+        /* Google's badge PNG has built-in transparent padding; scale it up so it matches the Apple badge */
+        .badge-google { height: 83px; width: auto; margin: -13.5px -10px; }
 
-        .logo-placeholder {
-            color: rgba(255,255,255,0.7);
-            font-size: 0.9rem;
-            text-align: center;
-            font-weight: 500;
-        }
+        /* Hero */
+        .hero { display: flex; flex-wrap: wrap; align-items: center; gap: clamp(40px, 6vw, 96px); padding-top: clamp(32px, 6vw, 88px); padding-bottom: clamp(48px, 7vw, 104px); }
+        .hero-text { flex: 1 1 460px; min-width: 0; display: flex; flex-direction: column; gap: 28px; }
+        .pill { display: inline-flex; align-self: flex-start; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; background: #fff; border: 1px solid var(--line); font-size: 14px; font-weight: 500; color: var(--ink-2); }
+        .pill-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--orange); }
+        .hero h1 { font-size: clamp(44px, 6vw, 76px); line-height: 1.02; letter-spacing: -0.03em; font-weight: 700; }
+        .hero-sub { font-size: clamp(18px, 1.6vw, 21px); line-height: 1.55; color: var(--ink-2); max-width: 34ch; }
+        .hero-note { font-size: 14px; color: var(--ink-3); }
+        .hero-phone { flex: 0 1 340px; min-width: 260px; display: flex; justify-content: center; position: relative; }
+        .hero-phone::before { content: ""; position: absolute; inset: 8% -6% -4% -6%; border-radius: 48px; background: var(--peach); }
+        .phone { position: relative; width: 100%; max-width: 320px; padding: 10px; border-radius: 52px; background: var(--ink); box-shadow: 0 30px 60px rgba(22, 34, 43, 0.25); }
+        .phone img { display: block; width: 100%; height: auto; border-radius: 42px; }
 
-        .hero h1 {
-            font-size: 3.5rem;
-            font-weight: 800;
-            color: white;
-            margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            letter-spacing: -0.02em;
-        }
+        /* Dew point */
+        .dark { background: var(--ink); color: #fff; }
+        .dew-head { display: flex; flex-wrap: wrap; gap: 32px 64px; align-items: flex-end; justify-content: space-between; margin-bottom: 48px; }
+        .dew-head > div { flex: 1 1 420px; display: flex; flex-direction: column; gap: 16px; }
+        .dark .eyebrow { color: #F2A66B; }
+        .dew-head p.copy { flex: 1 1 360px; font-size: 18px; line-height: 1.6; color: #C9D2D8; }
+        .bands { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; }
+        .band { display: flex; flex-direction: column; gap: 10px; padding: 20px; border-radius: 16px; color: var(--ink); }
+        .band b { font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 700; }
+        .band span { font-size: 15px; font-weight: 600; }
+        .band.light { color: #fff; }
+        .dew-foot { margin-top: 24px; font-size: 13px; color: #9AA7B0; }
 
-        .hero .tagline {
-            font-size: 1.5rem;
-            color: rgba(255,255,255,0.95);
-            margin-bottom: 2rem;
-            font-weight: 300;
-        }
+        /* Features */
+        .features-head { display: flex; flex-direction: column; gap: 16px; max-width: 640px; margin-bottom: 48px; }
+        .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+        .card { display: flex; flex-direction: column; gap: 20px; padding: 28px; border-radius: 24px; background: #fff; border: 1px solid var(--line); }
+        .card h3 { font-size: 22px; font-weight: 700; }
+        .card > p { font-size: 16px; line-height: 1.6; color: var(--ink-2); }
+        .mini { display: flex; flex-direction: column; gap: 12px; padding: 20px; border-radius: 16px; }
+        .mini-label { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; }
+        .mini-blue { background: #EEF4F8; } .mini-blue .mini-label { color: var(--blue); }
+        .mini-peach { background: #FBEFE3; } .mini-peach .mini-label { color: var(--orange-dark); }
+        .mini-green { background: #F1F3EE; gap: 4px; } .mini-green .mini-label { color: #44663A; padding-bottom: 6px; }
+        .mini-big { font-family: 'Space Grotesk', sans-serif; font-size: 26px; font-weight: 700; }
+        .mini-small { font-size: 13px; color: var(--ink-2); }
+        .bars { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 4px; align-items: end; height: 56px; }
+        .bars i { display: block; border-radius: 4px; background: #B8CDDC; }
+        .bars i.best { background: var(--blue); }
+        .wear-item { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 500; }
+        .hour { display: grid; grid-template-columns: 56px 44px 1fr; align-items: center; gap: 8px; padding: 6px 0; font-size: 14px; border-top: 1px solid #DDE2D8; }
+        .hour .t { color: var(--ink-3); }
+        .hour .v { font-weight: 600; }
+        .hour .d { display: flex; align-items: center; gap: 8px; color: var(--ink-2); }
+        .dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+        .extras { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; margin-top: 48px; }
+        .extra { display: flex; flex-direction: column; gap: 8px; padding: 20px 0; border-top: 2px solid var(--ink); }
+        .extra h3 { font-size: 18px; font-weight: 700; }
+        .extra p { font-size: 15px; line-height: 1.55; color: var(--ink-2); }
 
-        .hero .subtitle {
-            font-size: 1.1rem;
-            color: rgba(255,255,255,0.9);
-            margin-bottom: 3rem;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
+        /* Platforms */
+        .platforms-band { background: #fff; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+        .platforms { display: flex; flex-wrap: wrap; gap: 48px; }
+        .platforms-text { flex: 1 1 320px; display: flex; flex-direction: column; gap: 16px; }
+        .platforms-text .h2 { font-size: clamp(32px, 3.6vw, 46px); line-height: 1.1; }
+        .table-box { flex: 1.4 1 460px; min-width: 0; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 15px; }
+        thead th { padding: 12px 8px; font-weight: 600; text-align: center; border-bottom: 2px solid var(--ink); }
+        thead th:first-child { padding-left: 0; text-align: left; color: var(--ink-3); }
+        tbody th { padding: 14px 0; text-align: left; font-weight: 500; border-bottom: 1px solid var(--line); }
+        tbody td { padding: 14px 8px; text-align: center; font-weight: 600; color: var(--green); border-bottom: 1px solid var(--line); }
+        tbody td.no { color: #7A858D; }
 
-        .runner-silhouette {
-            position: absolute;
-            right: 10%;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 200px;
-            height: 200px;
-            opacity: 0.6;
-            animation: float 3s ease-in-out infinite;
-        }
+        /* Closing panel */
+        .closing { display: flex; flex-wrap: wrap; align-items: center; gap: 32px 56px; padding: clamp(32px, 5vw, 64px); border-radius: 32px; background: var(--peach); }
+        .closing > img { width: 120px; height: 120px; border-radius: 28px; object-fit: cover; box-shadow: 0 16px 32px rgba(22, 34, 43, 0.18); }
+        .closing h2 { flex: 1 1 380px; font-size: clamp(30px, 3.4vw, 44px); line-height: 1.1; letter-spacing: -0.02em; font-weight: 700; }
+        .closing .badge-apple { height: 52px; }
+        .closing .badge-google { height: 77px; margin: -12.5px -9px; }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(-50%) translateX(0); }
-            50% { transform: translateY(-50%) translateX(10px); }
-        }
+        /* Footer */
+        .site-footer { background: var(--ink); color: #C9D2D8; }
+        .footer-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px; padding-top: 48px; padding-bottom: 48px; font-size: 15px; }
+        .footer-brand { display: flex; align-items: center; gap: 12px; }
+        .footer-brand img { width: 32px; height: 32px; border-radius: 8px; object-fit: cover; }
+        .footer-brand span { font-family: 'Space Grotesk', sans-serif; font-weight: 700; color: #fff; }
+        .footer-nav { display: flex; flex-wrap: wrap; gap: 8px 24px; }
+        .footer-nav a { color: #fff; text-decoration: none; padding: 12px 0; }
+        .footer-nav a:hover { color: #F2A66B; }
+        .copyright { font-size: 14px; color: #9AA7B0; }
 
-        .weather-icons {
-            position: absolute;
-            left: 10%;
-            top: 30%;
-            opacity: 0.4;
-            animation: bounce 2s ease-in-out infinite;
-        }
+        .menu-toggle { display: none; }
 
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
-        }
-
-        .cta-button {
-            display: inline-block;
-            background: linear-gradient(45deg, #2c3e50, #3498db);
-            color: white;
-            padding: 1rem 2.5rem;
-            text-decoration: none;
-            border-radius: 50px;
-            font-size: 1.2rem;
-            font-weight: 600;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            transition: all 0.3s ease;
-            border: 3px solid rgba(255,255,255,0.3);
-        }
-
-        .cta-button:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
-            background: linear-gradient(45deg, #34495e, #2980b9);
-        }
-
-        .screenshots {
-            padding: 4rem 2rem;
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            text-align: center;
-        }
-
-        .screenshots h2 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            color: #2c3e50;
-        }
-
-        .screenshots p {
-            font-size: 1.1rem;
-            color: #7f8c8d;
-            margin-bottom: 3rem;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .screenshots-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 2rem;
-            flex-wrap: wrap;
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        .screenshot-frame {
-            width: 250px;
-            height: 500px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1rem;
-            font-weight: 600;
-            text-align: center;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-            transition: transform 0.3s ease;
-            border: 8px solid #2c3e50;
-        }
-
-        .screenshot-frame:hover {
-            transform: translateY(-10px);
-        }
-
-        .screenshot-frame:nth-child(2) {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        }
-
-        .screenshot-frame:nth-child(3) {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-        }
-
-        .features {
-            padding: 4rem 2rem;
-            background: white;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .features h2 {
-            text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 3rem;
-            color: #2c3e50;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-        }
-
-        .feature-card {
-            background: #f8f9fa;
-            padding: 2rem;
-            border-radius: 20px;
-            text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-10px);
-        }
-
-        .feature-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-
-        .feature-card h3 {
-            font-size: 1.3rem;
-            margin-bottom: 1rem;
-            color: #2c3e50;
-        }
-
-        .feature-card p {
-            color: #7f8c8d;
-            line-height: 1.6;
-        }
-
-        .footer {
-            background: #2c3e50;
-            color: white;
-            text-align: center;
-            padding: 3rem 2rem;
-        }
-
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .footer-tagline {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-            color: #ecf0f1;
-        }
-
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .footer-links a {
-            color: #bdc3c7;
-            text-decoration: none;
-            font-size: 1rem;
-            transition: color 0.3s ease;
-        }
-
-        .footer-links a:hover {
-            color: #3498db;
-        }
-
-        .social-icons {
-            display: flex;
-            justify-content: center;
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .social-icons a {
-            display: inline-block;
-            width: 50px;
-            height: 50px;
-            background: #34495e;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            text-decoration: none;
-            font-size: 1.5rem;
-            transition: all 0.3s ease;
-        }
-
-        .social-icons a:hover {
-            background: #3498db;
-            transform: translateY(-5px);
-        }
-
-        .download-btn {
-            height: 5rem;
-        }
-
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5rem;
+        @media (max-width: 720px) {
+            .site-header { position: relative; }
+            .menu-toggle {
+                display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+                min-width: 44px; min-height: 44px; padding: 10px 16px; border-radius: 999px;
+                border: 1px solid var(--line); background: #fff; color: var(--ink);
+                font: 600 15px Inter, system-ui, sans-serif; cursor: pointer;
             }
-            
-            .hero .tagline {
-                font-size: 1.2rem;
+            .menu-toggle .icon-close { display: none; }
+            .menu-toggle[aria-expanded="true"] .icon-open { display: none; }
+            .menu-toggle[aria-expanded="true"] .icon-close { display: block; }
+            .main-nav {
+                display: none; position: absolute; top: 100%; left: var(--gutter); right: var(--gutter); z-index: 20;
+                flex-direction: column; align-items: stretch; gap: 0; padding: 8px;
+                background: #fff; border: 1px solid var(--line); border-radius: 20px;
+                box-shadow: 0 20px 40px rgba(22, 34, 43, 0.15); font-size: 17px;
             }
-            
-            .logo {
-                width: 100px;
-                height: 100px;
-                margin-bottom: 1.5rem;
-            }
-            
-            .runner-silhouette {
-                display: none;
-            }
-            
-            .weather-icons {
-                display: none;
-            }
-            
-            .screenshots-container {
-                flex-direction: column;
-                gap: 1.5rem;
-            }
-            
-            .screenshot-frame {
-                width: 200px;
-                height: 400px;
-            }
-            
-            .footer-links {
-                flex-direction: column;
-                gap: 1rem;
-            }
-            
-            .download-btn {
-                height: 3rem;
-            }
+            .main-nav.open { display: flex; }
+            .main-nav a { padding: 14px 16px; border-radius: 12px; }
+            .main-nav a:hover { background: var(--ground); }
+            .main-nav .nav-cta { margin-top: 6px; text-align: center; }
         }
-        .store-badges { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 1rem; }
-        /* Google's badge PNG has built-in padding; scale it up to match the App Store badge */
-        .download-btn.play-badge { height: 7.5rem; margin: -1.25rem -1rem; }
-        @media (max-width: 768px) { .download-btn.play-badge { height: 4.5rem; margin: -0.75rem -0.6rem; } }
+
+        @media (max-width: 600px) {
+            .badge-apple { height: 48px; }
+            .badge-google { height: 71px; margin: -11.5px -8.5px; }
+        }
     </style>
 </head>
 <body>
-    <section class="hero">
-        <div class="weather-icons">
-            {{!-- <svg width="80" height="80" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="50" cy="30" r="15" fill="white"/>
-                <path d="M50 45L55 50L50 55L45 50Z" fill="white"/>
-                <path d="M50 60L55 65L50 70L45 65Z" fill="white"/>
-                <path d="M25 45C25 35 35 25 45 25C55 25 65 35 65 45C65 50 62 54 58 57H32C28 54 25 50 25 45Z" fill="white"/>
-            </svg> --}}
-        </div>
-        
-        <div class="hero-content">
-            <img class="logo" src="{{asset 'images/logo.jpeg'}}" alt="logo" >
-            <h1>Runners Weather</h1>
-            <p class="tagline">Your Personal Running Forecast</p>
-            <p class="subtitle">Run smarter. Feel better. Plan your runs around real conditions — not just the temperature.</p>
-            {{!-- <a href="#" class="cta-button">📲 Get Running Weather on App Store</a> --}}
-            <div class="store-badges">
-                <a href="https://apps.apple.com/app/6747822231"><img class="download-btn" src="{{asset 'images/Download_on_the_App_Store_Badge_US-UK_RGB_blk_092917.svg'}}" alt="Download on the App Store"></a>
-                <a href="https://play.google.com/store/apps/details?id=com.desseignstudios.runnerweather"><img class="download-btn play-badge" src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Google Play"></a>
-            </div>
-        </div>
-        
-        <div class="runner-silhouette">
-            {{!-- <svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M100 50C100 40 90 30 80 30C70 30 60 40 60 50C60 60 70 70 80 70C90 70 100 60 100 50Z" fill="rgba(0,0,0,0.8)"/>
-                <path d="M75 70L85 70L90 90L85 150L80 150L75 90Z" fill="rgba(0,0,0,0.8)"/>
-                <path d="M85 90L110 100L115 105L110 110L85 100Z" fill="rgba(0,0,0,0.8)"/>
-                <path d="M75 90L50 100L45 105L50 110L75 100Z" fill="rgba(0,0,0,0.8)"/>
-                <path d="M80 150L85 150L90 170L85 175L80 170Z" fill="rgba(0,0,0,0.8)"/>
-                <path d="M75 150L70 170L65 175L70 180L75 170Z" fill="rgba(0,0,0,0.8)"/>
-            </svg> --}}
-        </div>
-    </section>
+    <header class="wrap site-header">
+        <a class="brand" href="#top">
+            <img src="{{asset 'images/logo.jpeg'}}" alt="">
+            <span>Runners Weather</span>
+        </a>
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">
+            <svg class="icon-open" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+            <svg class="icon-close" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+            Menu
+        </button>
+        <nav id="main-nav" class="main-nav" aria-label="Main">
+            <a href="#features">Features</a>
+            <a href="#dew-point">Why dew point</a>
+            <a href="#platforms">iPhone &amp; Android</a>
+            <a class="nav-cta" href="#download">Download</a>
+        </nav>
+    </header>
 
-        <section class="features">
-        <h2>🏃‍♂️ Why Runners Love It</h2>
-        <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon">🌡️</div>
-                <h3>Dew Point-Based Color Cues</h3>
-                <p>Instantly know if conditions are ideal, moderate, or risky for a run.</p>
+    <main>
+        <section id="top" class="wrap hero">
+            <div class="hero-text">
+                <p class="pill"><span class="pill-dot" aria-hidden="true"></span>Now on iPhone and Android</p>
+                <h1>Know when to run.<br>And what to wear.</h1>
+                <p class="hero-sub">Dew point, wind, rain and feels-like temps, turned into one clear answer for every hour of your day.</p>
+                <div id="download" class="badges">
+                    <a href="https://apps.apple.com/app/6747822231">
+                        <img class="badge-apple" src="{{asset 'images/Download_on_the_App_Store_Badge_US-UK_RGB_blk_092917.svg'}}" alt="Download on the App Store">
+                    </a>
+                    <a href="https://play.google.com/store/apps/details?id=com.desseignstudios.runnerweather">
+                        <img class="badge-google" src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Google Play">
+                    </a>
+                </div>
+                <p class="hero-note">Free to download · No account needed · No ads</p>
             </div>
-            <div class="feature-card">
-                <div class="feature-icon">⏰</div>
-                <h3>Runner-Focused Hourly Forecasts</h3>
-                <p> 12-hour view with dew point, humidity, wind, and real feel.</p>
+            <div class="hero-phone">
+                <div class="phone">
+                    <img src="{{asset 'images/screenshot1.jpeg'}}" alt="Runners Weather current conditions screen: 94 degrees in Phoenix, dew point 64, sticky, with advice to watch your pace">
+                </div>
             </div>
-            <div class="feature-card">
-                <div class="feature-icon">💡</div>
-                <h3>Real-Time Run Recommendations</h3>
-                <p>Advice on when to run, what to wear, or when to skip.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">📱</div>
-                <h3>Clean, Minimal iOS Design</h3>
-                <p>Lightning-fast and easy to read at a glance.</p>
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <section class="screenshots">
-        <h2>📸 Sneak Peek</h2>
-        <p>Get a glimpse of the clean, intuitive interface designed specifically for runners</p>
-        <div class="screenshots-container">
-            <img class="screenshot-frame" src="{{asset 'images/screenshot1.jpeg'}}" alt="sneak-peak">
-        </div>
-    </section>
+        <section id="dew-point" class="dark">
+            <div class="wrap section">
+                <div class="dew-head">
+                    <div>
+                        <p class="eyebrow">Why dew point</p>
+                        <h2 class="h2">Temperature tells half the story.</h2>
+                    </div>
+                    <p class="copy">Two 70° mornings can feel nothing alike. Dew point measures the moisture in the air, and it decides how hard your body works to stay cool. Runners Weather colors every hour by it, so you can see a sticky run coming.</p>
+                </div>
+                <div class="bands">
+                    <div class="band" style="background:#CFE3F1"><b>Under 50°</b><span>Comfortable</span></div>
+                    <div class="band" style="background:#BFE0C9"><b>50–55°</b><span>Pleasant</span></div>
+                    <div class="band" style="background:#F1E3A6"><b>55–60°</b><span>Noticeable</span></div>
+                    <div class="band" style="background:#F2B97D"><b>60–65°</b><span>Sticky</span></div>
+                    <div class="band light" style="background:#D9643A"><b>65–70°</b><span>Uncomfortable</span></div>
+                    <div class="band light" style="background:#8E2B22"><b>70°+</b><span>Oppressive</span></div>
+                </div>
+                <p class="dew-foot">Dew point in °F. Comfort bands are general guidance; everyone handles humidity differently.</p>
+            </div>
+        </section>
 
-    <footer class="footer">
-        <div class="footer-content">
-            <p class="footer-tagline">⚙️ Made by Runners, for Runners</p>
-            <p style="margin-bottom: 2rem; color: #bdc3c7;">Built by runners who know dew point > temperature. Running Weather helps you run your best—every day, in every season.</p>
-            
-            <div class="footer-links">
+        <section id="features" class="wrap section">
+            <div class="features-head">
+                <p class="eyebrow">Features</p>
+                <h2 class="h2">Built around the questions runners actually ask.</h2>
+            </div>
+            <div class="cards">
+                <article class="card">
+                    <div class="mini mini-blue" aria-hidden="true">
+                        <p class="mini-label">YOUR RUN IQ</p>
+                        <p class="mini-big">Best: 6–8 AM</p>
+                        <div class="bars"><i style="height:30%"></i><i class="best" style="height:92%"></i><i class="best" style="height:100%"></i><i style="height:62%"></i><i style="height:38%"></i><i style="height:24%"></i><i style="height:52%"></i><i style="height:70%"></i></div>
+                        <p class="mini-small">52° · dew point 44° · wind 6 mph from the north</p>
+                    </div>
+                    <h3>When to run</h3>
+                    <p>Run IQ scores the next days hour by hour and picks your best window, with a wind tip for which way to head out.</p>
+                </article>
+                <article class="card">
+                    <div class="mini mini-peach" aria-hidden="true">
+                        <p class="mini-label">WHAT TO WEAR</p>
+                        <div class="wear-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A8501A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Long-sleeve tech tee</div>
+                        <div class="wear-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A8501A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Shorts</div>
+                        <div class="wear-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A8501A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Light gloves</div>
+                        <div class="wear-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A8501A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Reflective vest after 5 PM</div>
+                    </div>
+                    <h3>What to wear</h3>
+                    <p>Gear for the conditions you will actually run in, day or night, down to reflective gear and a headlamp after dark.</p>
+                </article>
+                <article class="card">
+                    <div class="mini mini-green" aria-hidden="true">
+                        <p class="mini-label">HOURLY</p>
+                        <div class="hour"><span class="t">6 AM</span><span class="v">52°</span><span class="d"><i class="dot" style="background:#7FB0D4"></i>Dew point 44°</span></div>
+                        <div class="hour"><span class="t">8 AM</span><span class="v">55°</span><span class="d"><i class="dot" style="background:#7FB0D4"></i>Dew point 47°</span></div>
+                        <div class="hour"><span class="t">12 PM</span><span class="v">64°</span><span class="d"><i class="dot" style="background:#E2C54F"></i>Dew point 56°</span></div>
+                        <div class="hour"><span class="t">3 PM</span><span class="v">67°</span><span class="d"><i class="dot" style="background:#E8772E"></i>Dew point 61°</span></div>
+                        <div class="hour"><span class="t">6 PM</span><span class="v">60°</span><span class="d"><i class="dot" style="background:#86C39A"></i>Dew point 55°</span></div>
+                    </div>
+                    <h3>Hour by hour</h3>
+                    <p>A runner's forecast: dew point, feels-like, wind and rain chance for every hour, readable at a glance.</p>
+                </article>
+            </div>
+            <div class="extras">
+                <div class="extra"><h3>Night mode</h3><p>Icons follow the real sunrise and sunset, and the advice changes once it gets dark.</p></div>
+                <div class="extra"><h3>Wind tip</h3><p>Start into the wind and finish with it at your back.</p></div>
+                <div class="extra"><h3>Feels-like, done right</h3><p>Heat and humidity together, not just the number on the thermometer.</p></div>
+                <div class="extra"><h3>Private by design</h3><p>No account, no ads, no tracking. Just the forecast.</p></div>
+            </div>
+        </section>
+
+        <section id="platforms" class="platforms-band">
+            <div class="wrap section platforms">
+                <div class="platforms-text">
+                    <p class="eyebrow">iPhone &amp; Android</p>
+                    <h2 class="h2">Same honest forecast on both.</h2>
+                    <p class="lead">The core of Runners Weather is on both phones. iPhone adds Pro extras like the Coach’s note, Lock Screen widgets, alerts and race-week forecasts for the World Marathon Majors.</p>
+                </div>
+                <div class="table-box">
+                    <table>
+                        <thead>
+                            <tr><th scope="col">Feature</th><th scope="col">iPhone</th><th scope="col">Android</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><th scope="row">Run IQ best-time window</th><td>Pro</td><td>Free</td></tr>
+                            <tr><th scope="row">What to wear</th><td>Free + Pro</td><td>Free</td></tr>
+                            <tr><th scope="row">Hourly dew point forecast</th><td>✓</td><td>✓</td></tr>
+                            <tr><th scope="row">Coach’s note (AI run brief)</th><td>Pro</td><td class="no">—</td></tr>
+                            <tr><th scope="row">Home-screen widget</th><td>Pro</td><td class="no">—</td></tr>
+                            <tr><th scope="row">World Marathon Majors</th><td>Pro</td><td class="no">—</td></tr>
+                            <tr><th scope="row">Official weather alerts</th><td>Free</td><td class="no">—</td></tr>
+                            <tr><th scope="row">Run window &amp; dew point push alerts</th><td>Pro</td><td class="no">—</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section class="wrap section">
+            <div class="closing">
+                <img src="{{asset 'images/logo.jpeg'}}" alt="Runners Weather app icon">
+                <h2>Made by a runner, for runners.</h2>
+                <div class="badges">
+                    <a href="https://apps.apple.com/app/6747822231">
+                        <img class="badge-apple" src="{{asset 'images/Download_on_the_App_Store_Badge_US-UK_RGB_blk_092917.svg'}}" alt="Download on the App Store">
+                    </a>
+                    <a href="https://play.google.com/store/apps/details?id=com.desseignstudios.runnerweather">
+                        <img class="badge-google" src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Google Play">
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="wrap footer-row">
+            <div class="footer-brand">
+                <img src="{{asset 'images/logo.jpeg'}}" alt="">
+                <span>Runners Weather</span>
+            </div>
+            <nav class="footer-nav" aria-label="Footer">
                 <a href="mailto:info@runnersweather.com">Support</a>
-                <a href="/rw-privacy-policy">Privacy Policy</a>
-            </div>
-            
-            <div class="social-icons">
-                <a href="https://www.facebook.com/runnersweather/" target="_blank" aria-label="Facebook">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                    </svg>
-                </a>
-                <a href="https://instagram.com/runnersweather" target="_blank" aria-label="Instagram">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                    </svg>
-                </a>
-                <a href="https://x.com/runners_weather" target="_blank" aria-label="Twitter">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                    </svg>
-                </a>
-                <a href="https://threads.net/@runnersweather" target="_blank" aria-label="Threads">
-                    <svg width="24" height="24"  fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M331.5 235.7c2.2 .9 4.2 1.9 6.3 2.8c29.2 14.1 50.6 35.2 61.8 61.4c15.7 36.5 17.2 95.8-30.3 143.2c-36.2 36.2-80.3 52.5-142.6 53h-.3c-70.2-.5-124.1-24.1-160.4-70.2c-32.3-41-48.9-98.1-49.5-169.6V256v-.2C17 184.3 33.6 127.2 65.9 86.2C102.2 40.1 156.2 16.5 226.4 16h.3c70.3 .5 124.9 24 162.3 69.9c18.4 22.7 32 50 40.6 81.7l-40.4 10.8c-7.1-25.8-17.8-47.8-32.2-65.4c-29.2-35.8-73-54.2-130.5-54.6c-57 .5-100.1 18.8-128.2 54.4C72.1 146.1 58.5 194.3 58 256c.5 61.7 14.1 109.9 40.3 143.3c28 35.6 71.2 53.9 128.2 54.4c51.4-.4 85.4-12.6 113.7-40.9c32.3-32.2 31.7-71.8 21.4-95.9c-6.1-14.2-17.1-26-31.9-34.9c-3.7 26.9-11.8 48.3-24.7 64.8c-17.1 21.8-41.4 33.6-72.7 35.3c-23.6 1.3-46.3-4.4-63.9-16c-20.8-13.8-33-34.8-34.3-59.3c-2.5-48.3 35.7-83 95.2-86.4c21.1-1.2 40.9-.3 59.2 2.8c-2.4-14.8-7.3-26.6-14.6-35.2c-10-11.7-25.6-17.7-46.2-17.8H227c-16.6 0-39 4.6-53.3 26.3l-34.4-23.6c19.2-29.1 50.3-45.1 87.8-45.1h.8c62.6 .4 99.9 39.5 103.7 107.7l-.2 .2zm-156 68.8c1.3 25.1 28.4 36.8 54.6 35.3c25.6-1.4 54.6-11.4 59.5-73.2c-13.2-2.9-27.8-4.4-43.4-4.4c-4.8 0-9.6 .1-14.4 .4c-42.9 2.4-57.2 23.2-56.2 41.8l-.1 .1z"/></svg>
-                </a>
-            </div>
-            
-            <p style="color: #7f8c8d; font-size: 0.9rem;">© {{date format="YYYY"}} Desseign Studios.</p>
+                <a href="/rw-privacy-policy/">Privacy policy</a>
+                <a href="https://instagram.com/runnersweather">Instagram</a>
+                <a href="https://threads.net/@runnersweather">Threads</a>
+                <a href="https://x.com/runners_weather">X</a>
+                <a href="https://www.facebook.com/runnersweather/">Facebook</a>
+            </nav>
+            <p class="copyright">© {{date format="YYYY"}} Desseign Studios</p>
         </div>
     </footer>
+    <script>
+        (function () {
+            var btn = document.querySelector('.menu-toggle');
+            var nav = document.getElementById('main-nav');
+            if (!btn || !nav) return;
+            function setOpen(open) {
+                nav.classList.toggle('open', open);
+                btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+            }
+            btn.addEventListener('click', function () {
+                setOpen(btn.getAttribute('aria-expanded') !== 'true');
+            });
+            nav.addEventListener('click', function (e) {
+                if (e.target.closest('a')) setOpen(false);
+            });
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') setOpen(false);
+            });
+            document.addEventListener('click', function (e) {
+                if (!nav.contains(e.target) && !btn.contains(e.target)) setOpen(false);
+            });
+        })();
+    </script>
     {{ghost_foot}}
 </body>
 </html>
