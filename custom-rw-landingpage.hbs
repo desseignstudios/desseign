@@ -118,6 +118,25 @@
         .extra h3 { font-size: 18px; font-weight: 700; }
         .extra p { font-size: 15px; line-height: 1.55; color: var(--ink-2); }
 
+        /* Screens */
+        .screens-band { background: #F4EEE4; }
+        .screens-head { display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center; margin-bottom: 48px; }
+        .screens-head .h2 { max-width: 18ch; }
+        .screens { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 40px; }
+        .screens figure { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+        .screens .tall { flex: 0 1 240px; }
+        .screens .wide { flex: 0 1 520px; }
+        .frame { width: 100%; padding: 8px; background: var(--ink); box-shadow: 0 24px 48px rgba(22, 34, 43, 0.22); }
+        .tall .frame { border-radius: 40px; }
+        .tall .frame img { border-radius: 32px; }
+        .wide .frame { border-radius: 32px; }
+        .wide .frame img { border-radius: 24px; }
+        .frame img { display: block; width: 100%; height: auto; }
+        .screens figcaption { display: flex; flex-direction: column; align-items: center; gap: 2px; text-align: center; }
+        .screens figcaption b { font-size: 16px; font-weight: 600; }
+        .screens figcaption span { font-size: 14px; color: var(--ink-3); }
+        @media (max-width: 600px) { .screens .tall { flex-basis: 70%; } }
+
         /* Platforms */
         .platforms-band { background: #fff; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
         .platforms { display: flex; flex-wrap: wrap; gap: 48px; }
@@ -288,6 +307,29 @@
                 <div class="extra"><h3>Wind tip</h3><p>Start into the wind and finish with it at your back.</p></div>
                 <div class="extra"><h3>Feels-like, done right</h3><p>Heat and humidity together, not just the number on the thermometer.</p></div>
                 <div class="extra"><h3>Private by design</h3><p>No account, no ads, no tracking. Just the forecast.</p></div>
+            </div>
+        </section>
+
+        <section id="screens" class="screens-band">
+            <div class="wrap section">
+                <div class="screens-head">
+                    <p class="eyebrow">On every phone</p>
+                    <h2 class="h2">iPhone, iPhone Duo and Android.</h2>
+                </div>
+                <div class="screens">
+                    <figure class="tall">
+                        <div class="frame"><img src="{{asset 'images/rw-iphone-your-day.jpg'}}" alt="Runners Weather on iPhone: Your Day screen with the Run IQ window, the Coach's note and a feels-like chart" width="600" height="1235" loading="lazy"></div>
+                        <figcaption><b>iPhone</b><span>Run IQ and the Coach’s note</span></figcaption>
+                    </figure>
+                    <figure class="wide">
+                        <div class="frame"><img src="{{asset 'images/rw-duo-boston.jpg'}}" alt="Runners Weather on iPhone Duo, unfolded: current conditions on one side and settings on the other" width="1200" height="844" loading="lazy"></div>
+                        <figcaption><b>iPhone Duo</b><span>Forecast and settings side by side</span></figcaption>
+                    </figure>
+                    <figure class="tall">
+                        <div class="frame"><img src="{{asset 'images/rw-s26-what-to-wear.jpg'}}" alt="Runners Weather on Android: What to wear right now, a long-sleeve tech shirt and shorts" width="600" height="1200" loading="lazy"></div>
+                        <figcaption><b>Android</b><span>What to wear, free</span></figcaption>
+                    </figure>
+                </div>
             </div>
         </section>
 
